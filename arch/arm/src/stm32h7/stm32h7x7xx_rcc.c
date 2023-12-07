@@ -621,11 +621,17 @@ void stm32_stdclockconfig(void)
   uint32_t regval;
   volatile int32_t timeout;
 
+#if defined(STM32_BOARD_USEHSI) && !defined(STM32_BOARD_HSIDIV)
+#error When HSI is used, you have to define STM32_BOARD_HSIDIV in board/include/board.h
+#endif
+
 #ifdef STM32_BOARD_USEHSI
   /* Enable Internal High-Speed Clock (HSI) */
 
   regval  = getreg32(STM32_RCC_CR);
   regval |= RCC_CR_HSION;           /* Enable HSI */
+  regval &= ~(RCC_CR_HSIDIV_MASK);
+  regval |= STM32_BOARD_HSIDIV;
   putreg32(regval, STM32_RCC_CR);
 
   /* Wait until the HSI is ready (or until a timeout elapsed) */
@@ -879,9 +885,11 @@ void stm32_stdclockconfig(void)
 
       /* See Reference manual Section 5.4.1, System supply startup */
 
+      /* TODO: something is wrong with Vcore
       while ((getreg32(STM32_PWR_CSR1) & PWR_CSR1_ACTVOSRDY) == 0)
         {
         }
+        */
 
 #if STM32_VOS_OVERDRIVE && (STM32_PWR_VOS_SCALE == PWR_D3CR_VOS_SCALE_1)
       /* Over-drive support for VOS1 */
