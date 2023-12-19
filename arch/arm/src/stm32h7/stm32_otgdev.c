@@ -5573,9 +5573,9 @@ void arm_usbinitialize(void)
   regval |= STM32_PWR_CR3_USB33DEN;
   stm32_putreg(regval, STM32_PWR_CR3);
 
-  while ((stm32_getreg(STM32_PWR_CR3) & STM32_PWR_CR3_USB33RDY) == 0)
-    {
-    }
+//  while ((stm32_getreg(STM32_PWR_CR3) & STM32_PWR_CR3_USB33RDY) == 0)
+//    {
+//    }
 
   /* Here we assume that:
    *

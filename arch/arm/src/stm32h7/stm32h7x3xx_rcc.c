@@ -850,7 +850,9 @@ void stm32_stdclockconfig(void)
        */
 
       regval = getreg32(STM32_PWR_CR3);
-      regval |= STM32_PWR_CR3_LDOEN | STM32_PWR_CR3_LDOESCUEN;
+      //regval |= STM32_PWR_CR3_LDOEN | STM32_PWR_CR3_LDOESCUEN;
+      regval |= STM32_PWR_CR3_LDOEN;
+      regval &= ~STM32_PWR_CR3_LDOESCUEN; //TODO: make CONFIG for LDOESCUEN
       putreg32(regval, STM32_PWR_CR3);
 
       /* Set the voltage output scale */
@@ -962,6 +964,14 @@ void stm32_stdclockconfig(void)
       regval &= ~RCC_D3CCIPR_SPI6SEL_MASK;
       regval |= STM32_RCC_D3CCIPR_SPI6SRC;
       putreg32(regval, STM32_RCC_D3CCIPR);
+#endif
+
+      /* Configure USART234578 source clock */
+
+#if defined(STM32_RCC_D2CCIP2R_USART234578SRC)
+      regval = getreg32(STM32_RCC_D2CCIP2R);
+      regval &= ~RCC_D2CCIP2R_USART234578SEL_MASK;
+      regval |= STM32_RCC_D2CCIP2R_USART234578SRC;
 #endif
 
       /* Configure USB source clock */
