@@ -599,6 +599,10 @@ void stm32_stdclockconfig(void)
   uint32_t regval;
   volatile int32_t timeout;
 
+#if defined(STM32_BOARD_USEHSI) && !defined(STM32_BOARD_HSIDIV)
+#error When HSI is used, you have to define STM32_BOARD_HSIDIV in board/include/board.h
+#endif
+
 #ifdef STM32_BOARD_USEHSI
   /* Enable Internal High-Speed Clock (HSI) */
 
@@ -651,6 +655,14 @@ void stm32_stdclockconfig(void)
         }
     }
 #endif
+
+#if defined(STM32_BOARD_HSIDIV)
+  regval  = getreg32(STM32_RCC_CR);
+  regval &= ~(RCC_CR_HSIDIV_MASK);
+  regval |= STM32_BOARD_HSIDIV;
+  putreg32(regval, STM32_RCC_CR);
+#endif
+
 
 #ifdef CONFIG_STM32H7_HSI48
   /* Enable HSI48 */
