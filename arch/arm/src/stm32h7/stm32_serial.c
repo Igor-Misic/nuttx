@@ -683,7 +683,8 @@ static bool up_rxflowcontrol(struct uart_dev_s *dev, unsigned int nbuffered,
                              bool upper);
 #endif
 static void up_send(struct uart_dev_s *dev, int ch);
-#ifndef SERIAL_HAVE_ONLY_TXDMA
+#if defined(SERIAL_HAVE_RXDMA_OPS) || defined(SERIAL_HAVE_NODMA_OPS) || \
+    defined(CONFIG_STM32H7_SERIALBRK_BSDCOMPAT)
 static void up_txint(struct uart_dev_s *dev, bool enable);
 #endif
 static bool up_txready(struct uart_dev_s *dev);
@@ -1574,7 +1575,7 @@ static inline void up_setusartint(struct up_dev_s *priv, uint16_t ie)
  ****************************************************************************/
 
 #if !defined(SERIAL_HAVE_ONLY_DMA) || defined(CONFIG_PM) || \
-    defined(HAVE_RS485)
+    defined(HAVE_RS485) || defined(CONFIG_STM32H7_SERIALBRK_BSDCOMPAT)
 static void up_restoreusartint(struct up_dev_s *priv, uint16_t ie)
 {
   irqstate_t flags;
@@ -3489,7 +3490,7 @@ static void up_dma_txint(struct uart_dev_s *dev, bool enable)
  *
  ****************************************************************************/
 
-#if defined(SERIAL_HAVE_RXDMA_OPS) || defined(SERIAL_HAVE_NODMA_OPS)
+#if defined(SERIAL_HAVE_RXDMA_OPS) || defined(SERIAL_HAVE_NODMA_OPS) || defined(CONFIG_STM32H7_USART_BREAKS)
 static void up_txint(struct uart_dev_s *dev, bool enable)
 {
   struct up_dev_s *priv = (struct up_dev_s *)dev->priv;
