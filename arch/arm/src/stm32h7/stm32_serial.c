@@ -1437,7 +1437,9 @@ static struct up_dev_s g_uart8priv =
   .apbclock      = STM32_PCLK1_FREQUENCY,
   .usartbase     = STM32_UART8_BASE,
   .tx_gpio       = GPIO_UART8_TX,
+#if defined GPIO_UART8_RX
   .rx_gpio       = GPIO_UART8_RX,
+#endif
 #if defined(CONFIG_SERIAL_OFLOWCONTROL) && defined(CONFIG_UART8_OFLOWCONTROL)
   .oflow         = true,
   .cts_gpio      = GPIO_UART8_CTS,
