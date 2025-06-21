@@ -2120,6 +2120,10 @@ static void spi_exchange(struct spi_dev_s *dev, const void *txbuffer,
           /* Adjust pointers to internal DMA buffers */
 
           txbuffer  = priv->txbuf;
+#if defined(CONFIG_STM32H7_SPI6_DMA_BUFFER)
+        } else if (priv->spibase == STM32_SPI6_BASE){
+            txbuffer  = priv->txbuf;
+#endif
         }
 
       /* orig_rxbuffer holds the callers return buffer */
