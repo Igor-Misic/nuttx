@@ -905,8 +905,8 @@ void stm32_stdclockconfig(void)
        */
 
       regval = getreg32(STM32_PWR_CR3);
-      regval &= STM32_PWR_CR3_MASK;
-      regval |= STM32_PWR_CR3_SELECTION;
+      regval |= STM32_PWR_CR3_LDOEN;
+      regval &= ~STM32_PWR_CR3_SCUEN; //TODO: make CONFIG for SCUEN
       putreg32(regval, STM32_PWR_CR3);
 
       /* Set the voltage output scale */
