@@ -447,6 +447,13 @@
 #  define UART8_TXBUFSIZE_ALGN TXDMA_BUF_ALIGN
 #endif
 
+/* Define the location attribute only if using DMA */
+#if defined(CONFIG_UART8_TXDMA) || defined(CONFIG_UART8_RXDMA)
+#  define UART8_LOCATE locate_data(".sram4")
+#else
+#  define UART8_LOCATE
+#endif
+
 #ifdef SERIAL_HAVE_TXDMA
 /* DMA priority */
 
@@ -859,6 +866,7 @@ static char g_uart7rxfifo[RXDMA_BUFFER_SIZE]
 
 #ifdef CONFIG_UART8_RXDMA
 static char g_uart8rxfifo[RXDMA_BUFFER_SIZE]
+  UART8_LOCATE
   aligned_data(ARMV7M_DCACHE_LINESIZE);
 #endif
 
@@ -907,8 +915,11 @@ static char g_uart7txbuffer[UART7_TXBUFSIZE_ADJUSTED] \
 #endif
 
 #ifdef CONFIG_STM32H7_UART8
-static char g_uart8rxbuffer[CONFIG_UART8_RXBUFSIZE];
-static char g_uart8txbuffer[UART8_TXBUFSIZE_ADJUSTED] \
+static char g_uart8rxbuffer[CONFIG_UART8_RXBUFSIZE]
+  UART8_LOCATE
+  aligned_data(ARMV7M_DCACHE_LINESIZE);
+static char g_uart8txbuffer[UART8_TXBUFSIZE_ADJUSTED]
+  UART8_LOCATE
   UART8_TXBUFSIZE_ALGN;
 #endif
 
